@@ -1,17 +1,17 @@
+import Image from "next/image";
 import {
   Card,
-  CardDescription,
   CardHeader,
-  CardTitle,
   CardContent,
+  CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
-import Image from "next/image";
-import LoginForm from "@/components/modules/auth/LoginForm";
+import RegisterForm from "@/components/modules/auth/PatientRegisterForm";
 
-export default function LoginPage() {
+export default function PatientRegisterPage() {
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-xl shadow-cyan-100">
+      <Card className="w-full max-w-lg shadow-xl shadow-cyan-100">
         <CardHeader className="space-y-4 text-center">
           <div className="flex justify-center">
             <Image
@@ -24,16 +24,15 @@ export default function LoginPage() {
           </div>
           <div>
             <CardTitle className="md:text-2xl text-lg font-bold text-gray-800">
-              Welcome Heal Point
+              Join HealPoint
             </CardTitle>
             <CardDescription className="text-gray-500">
-              Login to your account
+              Create your account to get started
             </CardDescription>
           </div>
         </CardHeader>
-
         <CardContent>
-          <LoginForm />
+          <RegisterForm />
         </CardContent>
       </Card>
     </div>
