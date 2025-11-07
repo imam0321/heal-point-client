@@ -1,24 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { loginUser } from "@/services/auth/loginUser";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({ email, password });
-  };
+  const [state, formAction, isPending] = useActionState(loginUser, null);
+
+  console.log(state);
 
   return (
-    <form onSubmit={handleLogin} className="space-y-4">
+    <form action={formAction} className="space-y-4">
       <Field>
         <FieldLabel>Email Address</FieldLabel>
         <div className="relative">
@@ -28,8 +27,6 @@ export default function LoginForm() {
             name="email"
             type="email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -77,8 +74,9 @@ export default function LoginForm() {
       <Button
         type="submit"
         className="w-full bg-cyan-500 hover:bg-cyan-600 text-white"
+        disabled={isPending}
       >
-        Login
+        {isPending ? "Login..." : "Login"}
       </Button>
 
       <div className="text-center text-sm text-gray-600">

@@ -4,18 +4,19 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useActionState } from "react";
+import { registerPatient } from "@/services/auth/registerPatient";
 
 export default function PatientRegisterForm() {
+  const [state, formAction, isPending] = useActionState(registerPatient, null);
+  console.log(state);
+
   return (
-    <form className="space-y-4">
+    <form action={formAction} className="space-y-4">
       <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
         <Field>
-          <FieldLabel htmlFor="fullName">Full Name</FieldLabel>
-          <Input
-            id="fullName"
-            name="fullName"
-            placeholder="Enter full name"
-          />
+          <FieldLabel htmlFor="name">Full Name</FieldLabel>
+          <Input id="name" name="name" placeholder="Enter full name" />
         </Field>
 
         <Field>
@@ -30,7 +31,6 @@ export default function PatientRegisterForm() {
       </div>
 
       <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-      
         <Field>
           <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
           <Input id="phone" name="phone" placeholder="Enter phone number" />
@@ -66,9 +66,10 @@ export default function PatientRegisterForm() {
 
       <Button
         type="submit"
+        disabled={isPending}
         className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
       >
-        Create Account
+        {isPending ? "Creating...." : "Create Account"}
       </Button>
       <p className="text-center text-sm text-gray-600">
         Already have an account?{" "}
