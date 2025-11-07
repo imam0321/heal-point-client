@@ -2,13 +2,15 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Heart, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import Image from "next/image"
+
 
 export default function PublicNavbar() {
   const [scrolled, setScrolled] = React.useState(false)
@@ -30,7 +32,7 @@ export default function PublicNavbar() {
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Heart className="h-6 w-6 text-primary" />
+          <Image src="./heal-point-icon.svg" height={40} width={40} alt="heal point icon"/>
           <span className="text-lg md:text-xl font-semibold text-primary">
             Heal Point
           </span>
@@ -70,7 +72,7 @@ export default function PublicNavbar() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[240px] sm:w-[280px]">
+            <SheetContent side="right" className="w-60 sm:w-[280px]">
               <nav className="mt-6 flex flex-col gap-4">
                 {["Find Doctors", "Features", "How It Works", "Contact"].map((item, index) => {
                   const hrefs = ["#doctors", "#features", "#how-it-works", "#contact"]
