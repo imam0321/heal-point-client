@@ -73,7 +73,7 @@ export default function LoginForm() {
 
       <Button
         type="submit"
-        className="w-full bg-cyan-500 hover:bg-cyan-600 text-white"
+        className="w-full bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white font-medium transition"
         disabled={isPending}
       >
         {isPending ? "Login..." : "Login"}

@@ -80,7 +80,7 @@ export default function PatientRegisterForm() {
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
+        className="w-full bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white font-medium transition"
       >
         {isPending ? "Creating...." : "Create Account"}
       </Button>
