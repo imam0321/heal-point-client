@@ -3,14 +3,28 @@
 
 export const registerPatient = async (_currentState: any, formData: FormData) => {
   try {
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+    const ageValue = formData.get("age");
+    const genderValue = formData.get("gender");
+
+    if (password !== confirmPassword) {
+      return {
+        success: false,
+        error: "Passwords do not match"
+      };
+    }
+
     const registerData = {
-      password: formData.get("password"),
+      password: password,
       patient: {
         name: formData.get("name"),
         email: formData.get("email"),
-        contactNumber: formData.get("phone")
+        age: Number(ageValue),
+        gender: genderValue
       }
     }
+    console.log(ageValue, genderValue)
 
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(registerData));

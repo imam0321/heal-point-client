@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useActionState } from "react";
 import { registerPatient } from "@/services/auth/registerPatient";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PatientRegisterForm() {
   const [state, formAction, isPending] = useActionState(registerPatient, null);
@@ -32,15 +33,27 @@ export default function PatientRegisterForm() {
 
       <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
         <Field>
-          <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
-          <Input id="phone" name="phone" placeholder="Enter phone number" />
+          <FieldLabel htmlFor="age">Age</FieldLabel>
+          <Input
+            id="age"
+            type="number"
+            min={0}
+            name="age"
+            placeholder="Enter your age"
+          />
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="dob">Date of Birth</FieldLabel>
-          <div className="relative">
-            <Input id="dob" name="dob" type="date" />
-          </div>
+          <FieldLabel htmlFor="gender">Gender</FieldLabel>
+          <Select name="gender">
+            <SelectTrigger id="gender">
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="MALE">Male</SelectItem>
+              <SelectItem value="FEMALE">Female</SelectItem>
+            </SelectContent>
+          </Select>
         </Field>
       </div>
 
