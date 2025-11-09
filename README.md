@@ -1,3 +1,3 @@
-# Heal Point Server
+# Heal Point Client
 
-**Heal Point Server** is a secure and feature-rich frontend for a healthcare management system that connects patients with doctors. It enables patients to browse and book appointments with doctors, give reviews after consultations, and make payments for services. Doctors can manage appointments, provide prescriptions, and update patients' health records. The system also includes AI-powered doctor suggestions based on patient symptoms using OpenRouter, and supports video consultations between doctors and patients.
+**Heal Point Client** is a secure and feature-rich frontend for a healthcare management system that connects patients with doctors. It enables patients to browse and book appointments with doctors, give reviews after consultations, and make payments for services. Doctors can manage appointments, provide prescriptions, and update patients' health records. The system also includes AI-powered doctor suggestions based on patient symptoms using OpenRouter, and supports video consultations between doctors and patients.
