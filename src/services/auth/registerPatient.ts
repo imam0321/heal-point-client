@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
+import { loginUser } from "./loginUser";
+
 export const registerPatient = async (_currentState: any, formData: FormData) => {
   try {
     const password = formData.get("password");
@@ -24,7 +26,6 @@ export const registerPatient = async (_currentState: any, formData: FormData) =>
         gender: genderValue
       }
     }
-    console.log(ageValue, genderValue)
 
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(registerData));
@@ -32,12 +33,20 @@ export const registerPatient = async (_currentState: any, formData: FormData) =>
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/user/create-patient`, {
       method: "POST",
       body: newFormData
-    }).then(res => res.json());
+    })
 
-    return res
+    const result = await res.json();
 
-  } catch (error) {
-    console.log(error)
+    if (result.success) {
+      await loginUser(_currentState, formData);
+    }
+
+    return result
+
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error
+    }
     return error
   }
 }

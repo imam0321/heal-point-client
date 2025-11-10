@@ -1,15 +1,14 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { cookies } from 'next/headers';
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from './utility/auth.utils';
+import { deleteCookie, getCookie } from './services/auth/tokenHandlers';
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const cookieStore = await cookies();
 
   // cookie থেকে accessToken নেওয়া
-  const accessToken = request.cookies.get("accessToken")?.value || null;
+  const accessToken = await getCookie("accessToken") || null;
 
   let userRole: UserRole | null = null;
   if (accessToken) {
@@ -18,8 +17,8 @@ export async function proxy(request: NextRequest) {
 
     // token invalid হলে logout করে login এ পাঠানো
     if (typeof verifyToken === "string") {
-      cookieStore.delete("accessToken");
-      cookieStore.delete("refreshToken");
+      await deleteCookie("accessToken");
+      await deleteCookie("refreshToken");
       return NextResponse.redirect(new URL("/login", request.url))
     }
 

@@ -3,8 +3,8 @@
 import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/utility/auth.utils";
 import { parse } from "cookie"
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { setCookie } from "./tokenHandlers";
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
   try {
@@ -59,9 +59,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
       throw new Error("RefreshToken not found in cookies");
     }
 
-    const cookiesStore = await cookies();
-
-    cookiesStore.set("accessToken", accessTokenObject.accessToken, {
+    await setCookie("accessToken", accessTokenObject.accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -69,7 +67,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
       path: accessTokenObject.Path || "/"
     })
 
-    cookiesStore.set("refreshToken", refreshTokenObject.refreshToken, {
+    await setCookie("refreshToken", refreshTokenObject.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -92,14 +90,14 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
       } else {
         redirect(getDefaultDashboardRoute(userRole));
       }
+    } else {
+      redirect(getDefaultDashboardRoute(userRole));
     }
-
 
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) {
       throw error
     }
-    console.log(error)
     return { error: "Login failed" }
   }
 }
