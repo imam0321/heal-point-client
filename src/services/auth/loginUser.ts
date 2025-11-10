@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
+import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/utility/auth.utils";
 import { parse } from "cookie"
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
   try {
     let accessTokenObject: null | any = null;
     let refreshTokenObject: null | any = null;
+    const redirectPath = formData.get("redirectPath") || null;
 
     const loginData = {
       email: formData.get("email"),
@@ -73,9 +77,29 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
       path: refreshTokenObject.Path || "/"
     })
 
-    return result;
-  } catch (error) {
+    const verifyToken: JwtPayload | string = jwt.verify(accessTokenObject.accessToken, process.env.JWT_ACCESS_SECRET as string)
+
+    if (typeof verifyToken === "string") {
+      throw new Error("invalid token")
+    }
+
+    const userRole: UserRole = verifyToken.role;
+
+    if (redirectPath) {
+      const requestedPath = redirectPath.toString();
+      if (isValidRedirectForRole(requestedPath, userRole)) {
+        redirect(requestedPath);
+      } else {
+        redirect(getDefaultDashboardRoute(userRole));
+      }
+    }
+
+
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error
+    }
     console.log(error)
-    return error
+    return { error: "Login failed" }
   }
 }

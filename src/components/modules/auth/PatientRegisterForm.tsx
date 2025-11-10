@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -10,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export default function PatientRegisterForm() {
   const [state, formAction, isPending] = useActionState(registerPatient, null);
-  console.log(state);
 
   return (
     <form action={formAction} className="space-y-4">

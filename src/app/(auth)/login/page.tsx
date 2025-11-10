@@ -8,7 +8,13 @@ import {
 import Image from "next/image";
 import LoginForm from "@/components/modules/auth/LoginForm";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ redirect?: string }>;
+}) {
+  const params = (await searchParams) || {};
+
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-cyan-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl shadow-cyan-100">
@@ -33,7 +39,7 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
-          <LoginForm />
+          <LoginForm redirectPath={params?.redirect} />
         </CardContent>
       </Card>
     </div>

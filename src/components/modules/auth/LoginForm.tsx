@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useActionState, useState } from "react";
@@ -8,16 +9,17 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { loginUser } from "@/services/auth/loginUser";
 
-export default function LoginForm() {
+export default function LoginForm({ redirectPath }: { redirectPath?: string }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const [state, formAction, isPending] = useActionState(loginUser, null);
 
-  console.log(state);
-
   return (
     <form action={formAction} className="space-y-4">
+      {redirectPath && (
+        <Input type="hidden" name="redirectPath" value={redirectPath} />
+      )}
       <Field>
         <FieldLabel>Email Address</FieldLabel>
         <div className="relative">

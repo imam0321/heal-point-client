@@ -2,86 +2,11 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers';
-
-type UserRole = "PATIENT" | "DOCTOR" | "ADMIN";
-
-type RouteConfig = {
-  exact: string[],
-  patterns: RegExp[]
-}
-
-// যেসব route এ লগইন ছাড়া যাওয়া যায়
-const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
-
-// কমন ইউজারের জন্য protected route
-const commonProtectedRoutes: RouteConfig = {
-  exact: ["/my-profile", "settings"],
-  patterns: [],
-}
-
-// ডাক্তারদের protected route
-const doctorProtectedRoutes: RouteConfig = {
-  patterns: [/^\/doctor/],
-  exact: []
-}
-
-// অ্যাডমিনদের protected route
-const adminProtectedRoutes: RouteConfig = {
-  patterns: [/^\/admin/],
-  exact: []
-}
-
-// পেশেন্টদের protected route
-const patientProtectedRoutes: RouteConfig = {
-  patterns: [/^\/dashboard/],
-  exact: []
-}
-
-// এই ফাংশন চেক করে route টি auth route কিনা
-const isAuthRoute = (pathname: string) => {
-  return authRoutes.some((route: string) => route === pathname);
-}
-
-// এই ফাংশন চেক করে route টি কোন protected routes এর সাথে match করছে
-const isRouterMatches = (pathname: string, routes: RouteConfig): boolean => {
-  if (routes.exact.includes(pathname)) {
-    return true
-  }
-
-  return routes.patterns.some((pattern: RegExp) => pattern.test(pathname))
-}
-
-// কোন route কোন role এর জন্য তা বের করে
-const getRouteOwner = (pathname: string): "PATIENT" | "DOCTOR" | "ADMIN" | "COMMON" | null => {
-  switch (true) {
-    case isRouterMatches(pathname, adminProtectedRoutes):
-      return "ADMIN"
-    case isRouterMatches(pathname, doctorProtectedRoutes):
-      return "DOCTOR"
-    case isRouterMatches(pathname, patientProtectedRoutes):
-      return "PATIENT"
-    default:
-      return "COMMON"
-  }
-}
-
-// প্রতিটি role এর default dashboard route
-const getDefaultDashboardRoute = (role: UserRole): string => {
-  switch (role) {
-    case "ADMIN":
-      return "/admin/dashboard";
-    case "DOCTOR":
-      return "/doctor/dashboard";
-    case "PATIENT":
-      return "/dashboard";
-    default:
-      return "/";
-  }
-}
+import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from './utility/auth.utils';
 
 export async function proxy(request: NextRequest) {
-  const cookieStore = await cookies();
   const pathname = request.nextUrl.pathname;
+  const cookieStore = await cookies();
 
   // cookie থেকে accessToken নেওয়া
   const accessToken = request.cookies.get("accessToken")?.value || null;
@@ -93,8 +18,8 @@ export async function proxy(request: NextRequest) {
 
     // token invalid হলে logout করে login এ পাঠানো
     if (typeof verifyToken === "string") {
-      cookieStore.delete("accessToken")
-      cookieStore.delete("refreshToken")
+      cookieStore.delete("accessToken");
+      cookieStore.delete("refreshToken");
       return NextResponse.redirect(new URL("/login", request.url))
     }
 
@@ -135,22 +60,11 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-
-
   return NextResponse.next();
-
-
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
     '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.well-known).*)',
   ],
 }
