@@ -7,8 +7,15 @@ import { Button } from "../ui/button";
 import { NavLink } from "./DesktopNav";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import LogoutButton from "./LogoutButton";
 
-export default function MobileNav({ navLinks }: { navLinks: NavLink[] }) {
+export default function MobileNav({
+  navLinks,
+  isLoggedIn,
+}: {
+  navLinks: NavLink[];
+  isLoggedIn: boolean;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -42,11 +49,15 @@ export default function MobileNav({ navLinks }: { navLinks: NavLink[] }) {
                 {link.name}
               </Link>
             ))}
-            <div className="flex flex-col gap-2 mt-2">
-              <Button asChild className="bg-blue-500 hover:bg-blue-700 h-9">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild className="bg-green-500 hover:bg-green-600 h-9">
+            <div className="flex flex-col gap-2 mt-4">
+              {isLoggedIn ? (
+                <LogoutButton />
+              ) : (
+                <Button asChild className="bg-blue-500 hover:bg-blue-700 h-8">
+                  <Link href="/login">Login</Link>
+                </Button>
+              )}
+              <Button asChild className="bg-green-500 hover:bg-green-600 h-8">
                 <Link href="/doctor">Get Started</Link>
               </Button>
             </div>

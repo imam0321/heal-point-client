@@ -2,8 +2,9 @@ import Image from "next/image";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
 import Link from "next/link";
+import { getCookie } from "@/services/auth/tokenHandlers";
 
-export default function PublicNavbar() {
+export default async function PublicNavbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Find Doctors", href: "/find-doctors" },
@@ -11,6 +12,9 @@ export default function PublicNavbar() {
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
+
+  const accessToken = await getCookie("accessToken");
+  const isLoggedIn = accessToken ? true : false;
 
   return (
     <header className="w-full border-b bg-white sticky top-0 z-50 shadow-sm">
@@ -24,12 +28,14 @@ export default function PublicNavbar() {
             alt="Logo"
             priority
           />
-          <span className="font-bold text-lg text-gray-800">HealPoint</span>
+          <span className="font-bold text-lg text-gray-800 text-nowrap">
+            Heal Point
+          </span>
         </Link>
         {/* desktop navbar  */}
-        <DesktopNav navLinks={navLinks} />
+        <DesktopNav navLinks={navLinks} isLoggedIn={isLoggedIn} />
         {/* Mobile navbar  */}
-        <MobileNav navLinks={navLinks} />
+        <MobileNav navLinks={navLinks} isLoggedIn={isLoggedIn} />
       </div>
     </header>
   );

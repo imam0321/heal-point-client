@@ -7,8 +7,10 @@ export default function CommonLayout({
 }) {
   return (
     <>
-      <PublicNavbar />
-      <main>{children}</main>
+      <div className="min-h-screen flex flex-col">
+        <PublicNavbar />
+        <main className="grow">{children}</main>
+      </div>
     </>
   );
 }
