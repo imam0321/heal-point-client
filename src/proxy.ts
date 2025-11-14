@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from './utility/auth.utils';
+import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from './lib/auth.utils';
 import { deleteCookie, getCookie } from './services/auth/tokenHandlers';
 
 export async function proxy(request: NextRequest) {

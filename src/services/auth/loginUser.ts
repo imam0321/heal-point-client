@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
-import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/utility/auth.utils";
+import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth.utils";
 import { parse } from "cookie"
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
