@@ -5,16 +5,17 @@ import Link from "next/link";
 import { getCookie } from "@/services/auth/tokenHandlers";
 
 export default async function PublicNavbar() {
+  const accessToken = await getCookie("accessToken");
+  const isLoggedIn = accessToken ? true : false;
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Find Doctors", href: "/find-doctors" },
     { name: "Services", href: "/services" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
+    ...(isLoggedIn ? [{ name: "Dashboard", href: "/dashboard" }] : []),
   ];
-
-  const accessToken = await getCookie("accessToken");
-  const isLoggedIn = accessToken ? true : false;
 
   return (
     <header className="w-full border-b bg-white sticky top-0 z-50 shadow-sm">
