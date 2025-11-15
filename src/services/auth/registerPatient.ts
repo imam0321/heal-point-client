@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
+import { serverFetch } from "@/lib/server-fetch";
 import { loginUser } from "./loginUser";
 
 export const registerPatient = async (_currentState: any, formData: FormData) => {
@@ -30,8 +31,7 @@ export const registerPatient = async (_currentState: any, formData: FormData) =>
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(registerData));
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/user/create-patient`, {
-      method: "POST",
+    const res = await serverFetch.post("/user/create-patient", {
       body: newFormData
     })
 

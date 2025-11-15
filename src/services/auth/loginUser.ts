@@ -5,6 +5,7 @@ import { parse } from "cookie"
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { setCookie } from "./tokenHandlers";
+import { serverFetch } from "@/lib/server-fetch";
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
   try {
@@ -17,11 +18,7 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
       password: formData.get("password")
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+    const res = await serverFetch.post("/auth/login", {
       body: JSON.stringify(loginData)
     });
 
