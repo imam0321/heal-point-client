@@ -6,6 +6,16 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { setCookie } from "./tokenHandlers";
 import { serverFetch } from "@/lib/server-fetch";
+import z from "zod";
+import { zodValidator } from "@/lib/zod-validator";
+
+const loginValidationZodSchema = z.object({
+  email: z.email({
+    message: "Email is required",
+  }),
+  password: z.string("Password is required")
+});
+
 
 export const loginUser = async (_currentState: any, formData: FormData): Promise<any> => {
   try {
@@ -13,21 +23,27 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
     let refreshTokenObject: null | any = null;
     const redirectPath = formData.get("redirectPath") || null;
 
-    const loginData = {
+    const payload = {
       email: formData.get("email"),
       password: formData.get("password")
     }
 
+    const validated = zodValidator(payload, loginValidationZodSchema);
+    if (!validated.success) {
+      return validated;
+    }
+
     const res = await serverFetch.post("/auth/login", {
-      body: JSON.stringify(loginData)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(validated.data)
     });
 
     const result = await res.json();
 
-    if (!res.ok) {
+    if (!result.success) {
       return {
         success: false,
-        error: result.message || "Login failed"
+        error: result.message || "Invalid email or password",
       };
     }
 
@@ -95,6 +111,6 @@ export const loginUser = async (_currentState: any, formData: FormData): Promise
     if (error?.digest?.startsWith("NEXT_REDIRECT")) {
       throw error
     }
-    return { error: "Login failed" }
+    return { error: error.message || "Login failed" }
   }
 }

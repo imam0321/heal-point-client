@@ -1,19 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { loginUser } from "@/services/auth/loginUser";
+import { toast } from "sonner";
+import InputFieldError from "@/components/shared/InputFieldError";
+
 
 export default function LoginForm({ redirectPath }: { redirectPath?: string }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [state, formAction, isPending] = useActionState(loginUser, null);
+
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   return (
     <form action={formAction} className="space-y-4">
@@ -32,11 +39,11 @@ export default function LoginForm({ redirectPath }: { redirectPath?: string }) {
             className="pl-10"
           />
         </div>
+        <InputFieldError field="email" state={state} />
       </Field>
 
       <Field>
         <FieldLabel>Password</FieldLabel>
-
         <div className="relative">
           <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           <Input
@@ -61,6 +68,7 @@ export default function LoginForm({ redirectPath }: { redirectPath?: string }) {
             )}
           </button>
         </div>
+        <InputFieldError field="password" state={state} />
       </Field>
 
       <div className="flex justify-end">
