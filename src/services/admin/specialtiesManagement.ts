@@ -43,7 +43,7 @@ export const createSpecialty = async (_prevState: any, formData: FormData) => {
   }
 }
 
-export const getSpecialty = async () => {
+export const getSpecialties = async () => {
   try {
     const res = await serverFetch.get("/specialties");
     return await res.json();
