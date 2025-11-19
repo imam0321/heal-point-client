@@ -8,59 +8,46 @@ import { createDoctorZodSchema, updateDoctorZodSchema } from "@/zod/doctor.valid
 
 export const createDoctor = async (_prevState: any, formData: FormData) => {
   try {
-    const payload: IDoctor = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      contactNumber: formData.get("contactNumber") as string,
-      address: formData.get("address") as string,
-      registrationNumber: formData.get("registrationNumber") as string,
-      experience: Number(formData.get("experience") as string
-      ),
-      gender: formData.get("gender") as "MALE" | "FEMALE",
-      appointmentFee: Number(formData.get("appointmentFee") as string),
-      qualification: formData.get("qualification") as string,
-      currentWorkingPlace: formData.get("currentWorkingPlace") as string,
-      designation: formData.get("designation") as string,
+    // Build the payload in the correct nested structure
+    const payload = {
       password: formData.get("password") as string,
-    }
+      doctor: {
+        name: formData.get("name") as string,
+        email: formData.get("email") as string,
+        contactNumber: formData.get("contactNumber") as string,
+        address: formData.get("address") as string,
+        registrationNumber: formData.get("registrationNumber") as string,
+        experience: Number(formData.get("experience") as string),
+        gender: formData.get("gender") as "MALE" | "FEMALE",
+        appointmentFee: Number(formData.get("appointmentFee") as string),
+        qualification: formData.get("qualification") as string,
+        currentWorkingPlace: formData.get("currentWorkingPlace") as string,
+        designation: formData.get("designation") as string,
+      }
+    };
 
+    // Validate with the correct structure
     const validated = zodValidator(payload, createDoctorZodSchema);
     if (!validated.success) {
       return validated;
     }
 
-    const newPayload = {
-      password: validated?.data?.password,
-      doctor: {
-        name: validated?.data?.name,
-        email: validated?.data?.email,
-        contactNumber: validated?.data?.contactNumber,
-        address: validated?.data?.address,
-        registrationNumber: validated?.data?.registrationNumber,
-        experience: validated?.data?.experience,
-        gender: validated?.data?.gender,
-        appointmentFee: validated?.data?.appointmentFee,
-        qualification: validated?.data?.qualification,
-        currentWorkingPlace: validated?.data?.currentWorkingPlace,
-        designation: validated?.data?.designation,
-      }
-    }
-
+    // Build FormData for the API
     const newFormData = new FormData();
-    newFormData.append("data", JSON.stringify(newPayload))
+    newFormData.append("data", JSON.stringify(validated.data));
 
     if (formData.get("file")) {
-      newFormData.append("file", formData.get("file") as Blob)
+      newFormData.append("file", formData.get("file") as Blob);
     }
 
     const res = await serverFetch.post("/user/create-doctor", {
       body: newFormData,
-    })
+    });
 
     return await res.json();
   } catch (error: any) {
-    console.log(error)
-    return { success: false, message: error.message }
+    console.log(error);
+    return { success: false, message: error.message };
   }
 }
 

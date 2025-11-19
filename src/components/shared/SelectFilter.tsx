@@ -48,10 +48,10 @@ export default function SelectFilter({
       onValueChange={handleChange}
       disabled={isPending}
     >
-      <SelectTrigger>
+      <SelectTrigger className="w-52">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="w-52">
         <SelectItem value="All">All</SelectItem>
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>

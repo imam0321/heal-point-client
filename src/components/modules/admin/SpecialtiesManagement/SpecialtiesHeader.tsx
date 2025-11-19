@@ -27,6 +27,7 @@ export default function SpecialtiesHeader() {
         title="Specialties Management"
         description="This is a Specialties Management"
         action={{
+          type: "link",
           label: "Add Specialty",
           icon: Plus,
           onClick: () => setIsDialogOpen(true),
