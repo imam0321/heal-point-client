@@ -1,7 +1,7 @@
 "use client";
 import ManagementTable from "@/components/shared/ManagementTable";
 import { ISpecialty } from "@/types/specialties.interface";
-import { specialtiesColumns } from "./SpecialtiesColumns";
+import { specialtiesColumns } from "./specialtiesColumns";
 import DeleteConfirmationDialog from "@/components/shared/DeleteConfirmationDialog";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
