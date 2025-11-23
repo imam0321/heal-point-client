@@ -1,3 +1,4 @@
+import PublicFooter from "@/components/shared/PublicFooter";
 import PublicNavbar from "@/components/shared/PublicNavbar";
 
 export default function CommonLayout({
@@ -10,6 +11,7 @@ export default function CommonLayout({
       <div className="min-h-screen flex flex-col">
         <PublicNavbar />
         <main className="grow">{children}</main>
+        <PublicFooter/>
       </div>
     </>
   );
